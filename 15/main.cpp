@@ -4,42 +4,82 @@
 using namespace std;
 class Solution {
 public:
-	static bool cmp(int i, int j) {return i<j;}
 	vector<vector<int>> threeSum(vector<int>& nums) {
-		ret.clear();
-		if (nums.empty())
+		if (nums.size() < 3)
 			return ret;
 		sort(nums.begin(), nums.end(), cmp);
-		int min = nums.front(), max = nums.back();
-		for (int i = 0; i < nums.size(); i++) {
-			if (nums[i]+2*max < 0)
+		int size = nums.size();
+		int max1 = nums.at(size-1), max2 = nums.at(size-2);
+		for (int i = 0; i < size-1; i++) {
+			if (nums[i]+max1+max2 < 0)
 				continue;
 			if (nums[i] > 0)
 				break;
 			if (i!=0 &&	nums.at(i) == nums.at(i-1))
 				continue;
-			for (int j = i+1; j < nums.size(); j++) {
-				if (nums[i]+nums[j]+max < 0)
+			int bsr = size-1;
+			for (int j = i+1; j < size-1; j++) {
+				if (nums[i]+nums[j]+max1 < 0)
 					continue;
 				if (nums[i]+nums[j] > 0)
 					break;
 				if (j!=i+1 && nums.at(j) == nums.at(j-1))
 					continue;
-				for (int k = j+1; k < nums.size(); k++) 
-					if (nums.at(i)+nums.at(j)+nums.at(k) == 0) {
-						newans(nums.at(i), nums.at(j), nums.at(k));
-						break;
-					}
+				int temp;
+				if ((temp = bs(j+1, bsr, (-1)*(nums.at(i)+nums.at(j)), nums))>0) {
+					bsr = temp;
+					ret.push_back({nums.at(i), nums.at(j), (-1)*(nums.at(i)+nums.at(j))});
+				}
 			}
 		}
 		return ret;
 	}
-	void newans(int i, int j, int k) {
-		vector<int> ans;
-		ans.push_back(i);
-		ans.push_back(j);
-		ans.push_back(k);
-		ret.push_back(ans);
+private:
+	static bool cmp(int i, int j) {return i<j;}
+	int bsRight(int l, int r, int tar, vector<int>& nums) {
+		int m = (l+r)/2;
+		if (l>=r)
+			return l;
+		if (nums.at(m) == tar)
+			return Right(m, r, tar, nums);
+		if (nums.at(m) < tar)
+			return bsRight(m+1, r, tar, nums);
+		if (nums.at(m) > tar)
+			return bsRight(l, m-1, tar, nums);
+		return -1;
+	}
+	int Right(int m, int r, int tar, vector<int>& nums) {
+		while(nums.at(m) == tar && m <nums.size())
+			m++;
+		return m;
+	}
+	int bsLeft(int l, int r, int tar, vector<int>& nums) {
+		int m = (l+r)/2;	
+		if (l>=r)
+			return l;
+		if (nums.at(m) == tar)
+			return Left(m, l, tar, nums);
+		if (nums.at(m) < tar)
+			return bsLeft(m+1, r, tar, nums);
+		if (nums.at(m) > tar)
+			return bsLeft(l, m-1, tar, nums);
+		return -1;
+	}
+	int Left(int m, int l, int tar, vector<int>& nums) {
+		while(nums.at(m) == tar && m > 0 )
+			m--;
+		return m;
+	}
+	int bs(int l, int r, int tar, vector<int>& nums) {
+		int m = (l+r)/2;
+		if (l>r)
+			return -1;
+		if (nums.at(m) == tar)
+			return m;
+		else if (nums.at(m) > tar)
+			return bs(l, m-1, tar, nums);
+		else 
+			return bs(m+1, r, tar, nums);
 	}
 	vector<vector<int>> ret;
 };
@@ -54,7 +94,7 @@ int main() {
 		input.at(i) = a;
 	}
 	vector<vector<int>> ans = Sol.threeSum(input);
-//	for (int i =0; i < ans.size(); i++)
-//		cout <<ans.at(i).at(0)<<" "<<ans.at(i).at(1)<< " "<<ans.at(i).at(2)<<endl;
+	for (int i =0; i < ans.size(); i++)
+		cout <<ans.at(i).at(0)<<" "<<ans.at(i).at(1)<< " "<<ans.at(i).at(2)<<endl;
 	return 0;
 }
