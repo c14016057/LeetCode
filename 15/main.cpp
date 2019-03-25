@@ -19,9 +19,9 @@ public:
 				continue;
 			int bsr = size-1;
 			for (int j = i+1; j < size-1; j++) {
-				if (nums[i]+nums[j]+max1 < 0)
+				if (nums[i]+nums[j]+nums.at(bsr) < 0)
 					continue;
-				if (nums[i]+nums[j] > 0)
+				if (j >= bsr ) 
 					break;
 				if (j!=i+1 && nums.at(j) == nums.at(j-1))
 					continue;
@@ -29,6 +29,8 @@ public:
 				if ((temp = bs(j+1, bsr, (-1)*(nums.at(i)+nums.at(j)), nums))>0) {
 					bsr = temp;
 					ret.push_back({nums.at(i), nums.at(j), (-1)*(nums.at(i)+nums.at(j))});
+				}else {
+					bsr = -1*temp;
 				}
 			}
 		}
@@ -73,7 +75,7 @@ private:
 	int bs(int l, int r, int tar, vector<int>& nums) {
 		int m = (l+r)/2;
 		if (l>r)
-			return -1;
+			return -1*l;
 		if (nums.at(m) == tar)
 			return m;
 		else if (nums.at(m) > tar)
