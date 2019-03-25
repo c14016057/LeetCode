@@ -8,4 +8,4 @@ gen:gen.cpp
 trans:trans.cpp
 	g++ -std=c++11 trans.cpp -o trans
 clean:
-	rm main main_n2
+	rm main main_n2 gen trans
