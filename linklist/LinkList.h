@@ -18,7 +18,7 @@ typedef struct ListNode {
 ///////////////////////////////
 class LinkList {
 public:
-	ListNode* NewList(vector<int>& vec) {
+	static ListNode* NewList(vector<int>& vec) {
 		ListNode *head = new ListNode(0), *nextlink;
 		nextlink = head;
 		for (int i = 0; i < vec.size(); i++) {
@@ -31,7 +31,7 @@ public:
 		delete head;
 		return ret;
 	}
-	void PrintList(ListNode* list) {
+	static void PrintList(ListNode* list) {
 		while(list) { 
 			cout << list->val << " ";
 			list = list->next;
